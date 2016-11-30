@@ -32,25 +32,20 @@ function convertPost(post) {
     console.log("  creating " + filename);
 
     let out = fs.createWriteStream(filename);
-    out.write('---\n', () => {
-        let markdown = post.markdown;
-        delete post.markdown;
-        delete post.html;
-        let frontmatter = {
-            title: post.title,
-            layout: 'post',
-            permalink: post.slug,
-            published: post.status === 'published',
-        };
-        out.write(yaml.dump(frontmatter), () => {
-            out.write('---\n', () => {
-                out.write(markdown, () => {
-                    out.close();
-                })
-            })
-        })
-    });
+    out.write('---\n');
+    let markdown = post.markdown;
+    delete post.markdown;
+    delete post.html;
+    let frontmatter = {
+        title: post.title,
+        layout: 'post',
+        permalink: post.slug,
+        published: post.status === 'published',
+    };
+    out.write(yaml.dump(frontmatter));
+    out.write('---\n');
+    out.write(markdown, () => out.close());
 }
 
 // run the command line arguments through the converter
-process.argv.slice(2).forEach((val) => convert(val));
+process.argv.slice(2).forEach(convert);
