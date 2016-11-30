@@ -28,6 +28,9 @@ function convertPost(post) {
         var markdown = post.markdown;
         delete post.markdown;
         delete post.html;
+        post.layout = 'post';
+        post.permalink = post.slug;
+        post.published = post.status === 'published';
         out.write(yaml.dump(post), () => {
             out.write('---\n', () => {
                 out.write(markdown, () => {
